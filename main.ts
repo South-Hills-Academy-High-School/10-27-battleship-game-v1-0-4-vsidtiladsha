@@ -71,27 +71,31 @@ function isPlayerXWinner (enemyBoats: Sprite[][], hitOrMissPX: Sprite[]) {
             killCount += 1
         }
     }
+    if (killCount == 3) {
+        let currentBoatSprite5 = 0
+        game.splash(currentBoatSprite5, "WINS!!")
+        game.over(true, effects.melt)
+    }
     return killCount
 }
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
-    if (moveBoatFlag == 3) {
-        if (currentPlayer == "Player1") {
-            isHitOrMiss(boatSpriteArrayP2, hitOrMissP1)
-            switchPlayer()
-        } else {
-            isHitOrMiss(boatSpriteArrayP1, hitOrMissP2)
-            switchPlayer()
-        }
-    } else {
-        currentBoat += 1
-        grid.place(cursor, tiles.getTileLocation(0, 0))
-        if (currentBoat == 3) {
-            currentBoat = 0
-            switchPlayer()
-            moveBoatFlag += 1
-        }
-    }
+    cpuplaceboat0()
+    cpuplaceboat1()
 })
+function cpuplaceboat1 () {
+    makeBoatInvisible(boatSpriteArrayP2[0])
+    if (randint(0, 1) == 0) {
+        grid.place(cursor, tiles.getTileLocation(randint(0, 8), randint(0, 6)))
+        grid.place(boatSpriteArrayP2[1][0], grid.add(grid.getLocation(cursor), 0, 0))
+        grid.place(boatSpriteArrayP2[1][1], grid.add(grid.getLocation(cursor), 1, 0))
+        grid.place(boatSpriteArrayP2[2][1], grid.add(grid.getLocation(cursor), 1, 0))
+    } else {
+        grid.place(cursor, tiles.getTileLocation(randint(0, 9), randint(0, 5)))
+        grid.place(boatSpriteArrayP2[1][0], grid.add(grid.getLocation(cursor), 0, 0))
+        grid.place(boatSpriteArrayP2[1][1], grid.add(grid.getLocation(cursor), 0, 0))
+        grid.place(boatSpriteArrayP2[1][2], grid.add(grid.getLocation(cursor), 0, 0))
+    }
+}
 controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
     rotateFlag = "nothing"
     grid.move(cursor, -1, 0)
@@ -122,6 +126,20 @@ controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     grid.move(cursor, 1, 0)
     grid.place(shadowCursor, tiles.getTileLocation(grid.spriteCol(cursor) + -1, grid.spriteRow(cursor)))
 })
+function cpuplaceboat0 () {
+    makeBoatInvisible(boatSpriteArrayP2[0])
+    if (randint(0, 1) == 0) {
+        grid.place(cursor, tiles.getTileLocation(randint(0, 8), randint(0, 6)))
+        grid.place(boatSpriteArrayP2[1][0], grid.add(grid.getLocation(cursor), 0, 0))
+        grid.place(boatSpriteArrayP2[1][1], grid.add(grid.getLocation(cursor), 1, 0))
+        grid.place(boatSpriteArrayP2[1][1], grid.add(grid.getLocation(cursor), 1, 0))
+    } else {
+        grid.place(cursor, tiles.getTileLocation(randint(0, 9), randint(0, 5)))
+        grid.place(boatSpriteArrayP2[1][0], grid.add(grid.getLocation(cursor), 0, 0))
+        grid.place(boatSpriteArrayP2[1][1], grid.add(grid.getLocation(cursor), 0, 0))
+        grid.place(boatSpriteArrayP2[1][2], grid.add(grid.getLocation(cursor), 0, 0))
+    }
+}
 function moveBoat (boatArray: any[], boatRotateArray: string[]) {
     makeBoatVisible(boatArray)
     if (grid.spriteRow(cursor) >= 8 - boatArray.length && boatRotateArray[currentBoat] == "up") {
@@ -389,6 +407,25 @@ function initP1 () {
         . . . . . . . . . . . . . . . . 
         `, SpriteKind.Projectile)]
 }
+controller.menu.onEvent(ControllerButtonEvent.Pressed, function () {
+    if (moveBoatFlag == 3) {
+        if (currentPlayer == "Player1") {
+            isHitOrMiss(boatSpriteArrayP2, hitOrMissP1)
+            switchPlayer()
+        } else {
+            isHitOrMiss(boatSpriteArrayP1, hitOrMissP2)
+            switchPlayer()
+        }
+    } else {
+        currentBoat += 1
+        grid.place(cursor, tiles.getTileLocation(0, 0))
+        if (currentBoat == 3) {
+            currentBoat = 0
+            switchPlayer()
+            moveBoatFlag += 1
+        }
+    }
+})
 function initP2 () {
     hitOrMissP2 = [sprites.create(img`
         . . . . . . . . . . . . . . . . 
